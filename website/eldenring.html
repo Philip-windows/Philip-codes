@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armaments of the Lands Between | Elden Ring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --abyss: #0a0806;
+            --deep-brown: #1a1410;
+            --tarnished: #2a221a;
+            --bronze: #6b5435;
+            --aged-gold: #c9a962;
+            --lord-gold: #e8c872;
+            --radiant-gold: #f4d98c;
+            --erdtree-gold: #ffd54a;
+            --blood-red: #8b2530;
+            --crimson: #b83340;
+            --glintstone-blue: #6e8fc7;
+            --somber: #9e8a6e;
+            --faint-smoke: #c4b8a3;
+            --bone-white: #e8dfd0;
+            --frost: #a8c8e0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--abyss);
+            color: var(--faint-smoke);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--abyss);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--bronze), var(--aged-gold));
+            border-radius: 0;
+        }
+
+        /* ===== UTILITY: FADE-IN ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.3s cubic-bezier(.25,.8,.25,1), transform 1.3s cubic-bezier(.25,.8,.25,1);
+        }
+        .reveal.shown {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,213,74,0.12) 0%, transparent 60%),
+                linear-gradient(180deg, rgba(10,8,6,0.3) 0%, rgba(10,8,6,0.75) 60%, var(--abyss) 100%);
+            z-index: 3;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.55) saturate(0.7) contrast(1.1);
+            animation: epicPan 30s ease-in-out infinite alternate;
+        }
+
+        @keyframes epicPan {
+            from { transform: scale(1.05) translate(0, 0); }
+            to   { transform: scale(1.15) translate(0, -2%); }
+        }
+
+        /* Erdtree rune glow overlay */
+        .hero-rune {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: min(600px, 80vw);
+            height: min(600px, 80vw);
+            z-index: 2;
+            opacity: 0.35;
+            background: radial-gradient(circle, rgba(255,213,74,0.35) 0%, rgba(255,213,74,0.08) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: runeBreath 6s ease-in-out infinite;
+        }
+        @keyframes runeBreath {
+            0%, 100% { transform: translate(-50%, -55%) scale(1); opacity: 0.3; }
+            50%      { transform: translate(-50%, -55%) scale(1.08); opacity: 0.5; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 4;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            font-size: 0.78rem;
+            letter-spacing: 0.7em;
+            color: var(--aged-gold);
+            text-transform: uppercase;
+            margin-bottom: 1.8rem;
+            padding-left: 0.7em;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: clamp(2.8rem, 7.5vw, 6rem);
+            letter-spacing: 0.08em;
+            background: linear-gradient(180deg, var(--radiant-gold) 0%, var(--aged-gold) 50%, var(--bronze) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.05;
+            text-shadow: 0 0 80px rgba(255,213,74,0.1);
+        }
+
+        .hero-subtitle {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            letter-spacing: 0.5em;
+            color: var(--somber);
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+            padding-left: 0.5em;
+        }
+
+        .hero-lore {
+            max-width: 620px;
+            margin: 0 auto;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 1.3vw, 1.2rem);
+            line-height: 2;
+            color: var(--bone-white);
+            opacity: 0.88;
+        }
+        .hero-lore::before, .hero-lore::after {
+            content: '❖';
+            color: var(--aged-gold);
+            margin: 0 1rem;
+            font-style: normal;
+            opacity: 0.6;
+        }
+
+        .hero-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2.8rem auto 0;
+            width: min(400px, 80%);
+        }
+        .hero-divider .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--aged-gold), transparent);
+        }
+        .hero-divider .rune {
+            width: 12px;
+            height: 12px;
+            border: 1px solid var(--aged-gold);
+            transform: rotate(45deg);
+            position: relative;
+        }
+        .hero-divider .rune::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--aged-gold);
+            opacity: 0.5;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .scroll-hint span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.5em;
+            color: var(--somber);
+            padding-left: 0.5em;
+        }
+        .scroll-sword {
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--aged-gold) 30%, var(--aged-gold) 70%, transparent);
+            position: relative;
+            animation: swordDrop 2.2s ease-in-out infinite;
+        }
+        .scroll-sword::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -4px;
+            width: 10px; height: 6px;
+            background: var(--aged-gold);
+            clip-path: polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%);
+        }
+        @keyframes swordDrop {
+            0%   { transform: translateY(-10px); opacity: 0.4; }
+            40%  { opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+
+        /* ===== SECTION COMMON ===== */
+        .section-wrap {
+            position: relative;
+        }
+        .section-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 7rem 2rem;
+            position: relative;
+        }
+        .section-kicker {
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.6em;
+            color: var(--aged-gold);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-left: 0.6em;
+        }
+        .section-kicker::before {
+            content: '';
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(to right, var(--bronze), transparent);
+        }
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: clamp(2rem, 4.5vw, 3.4rem);
+            letter-spacing: 0.06em;
+            background: linear-gradient(180deg, var(--lord-gold), var(--aged-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.2rem;
+        }
+        .section-lead {
+            max-width: 640px;
+            font-size: 1.08rem;
+            color: var(--somber);
+            font-style: italic;
+            line-height: 2;
+            margin-bottom: 4rem;
+        }
+        .section-lead::first-letter {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5em;
+            float: left;
+            line-height: 0.9;
+            margin: 0.1em 0.1em 0 0;
+            color: var(--aged-gold);
+        }
+
+        /* ===== LEGENDARY WEAPONS GRID ===== */
+        .weapons-section {
+            background:
+                radial-gradient(ellipse 80% 60% at 80% 0%, rgba(201,169,98,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 10% 100%, rgba(139,37,48,0.06) 0%, transparent 60%),
+                linear-gradient(180deg, var(--abyss) 0%, #0f0c08 50%, var(--deep-brown) 100%);
+        }
+
+        .weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        .weapon-card {
+            position: relative;
+            grid-column: span 4;
+            aspect-ratio: 3/4;
+            background:
+                linear-gradient(160deg, rgba(42,34,26,0.95) 0%, rgba(26,20,16,0.98) 100%);
+            border: 1px solid rgba(201,169,98,0.15);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(.25,.8,.25,1);
+        }
+        .weapon-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(45deg, transparent 0 10px, rgba(201,169,98,0.015) 10px 11px);
+            pointer-events: none;
+            z-index: 2;
+        }
+        /* Corner ornaments */
+        .weapon-card .corner {
+            position: absolute;
+            width: 22px; height: 22px;
+            z-index: 5;
+            transition: all 0.5s ease;
+            opacity: 0.5;
+        }
+        .weapon-card .corner.tl { top: 8px; left: 8px; border-top: 1px solid var(--aged-gold); border-left: 1px solid var(--aged-gold); }
+        .weapon-card .corner.tr { top: 8px; right: 8px; border-top: 1px solid var(--aged-gold); border-right: 1px solid var(--aged-gold); }
+        .weapon-card .corner.bl { bottom: 8px; left: 8px; border-bottom: 1px solid var(--aged-gold); border-left: 1px solid var(--aged-gold); }
+        .weapon-card .corner.br { bottom: 8px; right: 8px; border-bottom: 1px solid var(--aged-gold); border-right: 1px solid var(--aged-gold); }
+        .weapon-card:hover {
+            border-color: rgba(201,169,98,0.45);
+            transform: translateY(-6px);
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.6),
+                0 0 40px rgba(201,169,98,0.08),
+                inset 0 0 60px rgba(201,169,98,0.04);
+        }
+        .weapon-card:hover .corner { opacity: 1; }
+
+        /* Large featured card */
+        .weapon-card.featured {
+            grid-column: span 8;
+            grid-row: span 2;
+            aspect-ratio: auto;
+        }
+
+        .weapon-img {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+        .weapon-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.75) saturate(0.7) contrast(1.08);
+            transition: transform 1.2s ease, filter 0.8s ease;
+        }
+        .weapon-card:hover .weapon-img img {
+            transform: scale(1.08);
+            filter: brightness(0.9) saturate(0.9) contrast(1.1);
+        }
+        .weapon-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(26,20,16,0.2) 0%, transparent 35%, transparent 55%, rgba(10,8,6,0.88) 100%),
+                radial-gradient(ellipse at center, transparent 40%, rgba(10,8,6,0.4) 100%);
+        }
+
+        .weapon-card.featured .weapon-img::after {
+            background:
+                linear-gradient(180deg, rgba(26,20,16,0.2) 0%, transparent 40%, transparent 60%, rgba(10,8,6,0.92) 100%),
+                linear-gradient(90deg, rgba(10,8,6,0.5) 0%, transparent 40%, transparent 100%);
+        }
+
+        .weapon-info {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 2rem 1.8rem 1.6rem;
+            z-index: 4;
+        }
+        .weapon-card.featured .weapon-info {
+            padding: 3rem 2.8rem 2.4rem;
+            right: 45%;
+        }
+
+        .weapon-category {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.45em;
+            color: var(--radiant-gold);
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .weapon-category::before {
+            content: '';
+            width: 14px;
+            height: 1px;
+            background: var(--radiant-gold);
+        }
+
+        .weapon-name {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1.35rem;
+            letter-spacing: 0.07em;
+            color: var(--bone-white);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+        .weapon-card.featured .weapon-name {
+            font-size: 2.1rem;
+            letter-spacing: 0.1em;
+            background: linear-gradient(180deg, var(--radiant-gold), var(--aged-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .weapon-jp {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.9rem;
+            color: var(--somber);
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .weapon-desc {
+            font-size: 0.96rem;
+            line-height: 1.7;
+            color: var(--faint-smoke);
+            font-style: italic;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+        .weapon-card:hover .weapon-desc {
+            max-height: 180px;
+            opacity: 0.9;
+            margin-top: 0.4rem;
+        }
+        .weapon-card.featured .weapon-desc {
+            max-height: none;
+            opacity: 0.88;
+            font-size: 1rem;
+            margin-top: 0.4rem;
+        }
+
+        .weapon-stats {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            padding: 0.35rem 0.7rem;
+            border: 1px solid rgba(201,169,98,0.25);
+            color: var(--aged-gold);
+            background: rgba(10,8,6,0.5);
+        }
+        .stat-pill.heavy { color: var(--crimson); border-color: rgba(184,51,64,0.35); }
+        .stat-pill.magic { color: var(--glintstone-blue); border-color: rgba(110,143,199,0.35); }
+        .stat-pill.holy  { color: var(--erdtree-gold); border-color: rgba(255,213,74,0.3); }
+        .stat-pill.blood { color: var(--blood-red); border-color: rgba(139,37,48,0.45); }
+        .stat-pill.frost { color: var(--frost); border-color: rgba(168,200,224,0.35); }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-top: 1.4rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            color: var(--aged-gold);
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.5s ease;
+        }
+        .weapon-card:hover .read-more {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .weapon-card.featured .read-more {
+            opacity: 1;
+            transform: none;
+        }
+        .read-more::after {
+            content: '→';
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .read-more:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* ===== LORE / ATTRIBUTES SECTION ===== */
+        .lore-section {
+            background:
+                radial-gradient(ellipse 50% 60% at 0% 50%, rgba(139,37,48,0.06) 0%, transparent 60%),
+                linear-gradient(180deg, var(--deep-brown) 0%, #0e0a07 100%);
+        }
+
+        .lore-grid {
+            display: grid;
+            grid-template-columns: 7fr 5fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        .lore-panel p {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: var(--faint-smoke);
+            margin-bottom: 1.6rem;
+        }
+        .lore-panel p.drop::first-letter {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5em;
+            float: left;
+            line-height: 0.9;
+            margin: 0.08em 0.15em 0 0;
+            color: var(--aged-gold);
+            background: linear-gradient(180deg, var(--radiant-gold), var(--bronze));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .lore-panel em {
+            color: var(--aged-gold);
+            font-style: italic;
+        }
+
+        .talisman {
+            position: sticky;
+            top: 3rem;
+            padding: 2.5rem;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(255,213,74,0.06) 0%, transparent 60%),
+                linear-gradient(160deg, rgba(42,34,26,0.9) 0%, rgba(26,20,16,0.95) 100%);
+            border: 1px solid rgba(201,169,98,0.2);
+        }
+        .talisman::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(201,169,98,0.1);
+            pointer-events: none;
+        }
+        .talisman-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.5em;
+            color: var(--lord-gold);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .talisman-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            color: var(--bone-white);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .affinity-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed rgba(201,169,98,0.12);
+            font-size: 0.92rem;
+        }
+        .affinity-row:last-child { border-bottom: none; }
+        .affinity-row .name {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.2em;
+            font-size: 0.72rem;
+            color: var(--somber);
+            text-transform: uppercase;
+        }
+        .bars {
+            display: flex;
+            gap: 3px;
+        }
+        .bar {
+            width: 10px; height: 14px;
+            background: rgba(201,169,98,0.08);
+            border: 1px solid rgba(201,169,98,0.1);
+        }
+        .bar.fill {
+            background: linear-gradient(180deg, var(--radiant-gold), var(--bronze));
+            border-color: var(--aged-gold);
+            box-shadow: 0 0 6px rgba(255,213,74,0.3);
+        }
+        .requirements {
+            margin-top: 1.8rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(201,169,98,0.12);
+        }
+        .req-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            color: var(--somber);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .req-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        .req-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: var(--faint-smoke);
+        }
+        .req-item span:first-child {
+            color: var(--somber);
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+        }
+        .req-item.met span:last-child { color: var(--aged-gold); }
+
+        /* ===== SKILL / ASH OF WAR SECTION ===== */
+        .skills-section {
+            background:
+                radial-gradient(ellipse 70% 40% at 50% 100%, rgba(110,143,199,0.06) 0%, transparent 60%),
+                #0a0806;
+        }
+
+        .skills-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-card {
+            position: relative;
+            padding: 2rem 1.5rem 1.8rem;
+            background: linear-gradient(180deg, rgba(42,34,26,0.7), rgba(26,20,16,0.85));
+            border: 1px solid rgba(201,169,98,0.12);
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--aged-gold), transparent);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.6s ease;
+        }
+        .skill-card:hover {
+            border-color: rgba(201,169,98,0.35);
+            transform: translateY(-4px);
+        }
+        .skill-card:hover::before { transform: scaleX(1); }
+
+        .skill-sigil {
+            width: 46px; height: 46px;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--aged-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--lord-gold);
+            transform: rotate(0deg);
+            transition: transform 0.6s ease;
+            background: rgba(201,169,98,0.05);
+        }
+        .skill-card:hover .skill-sigil { transform: rotate(45deg); }
+
+        .skill-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--bone-white);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .skill-type {
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.35em;
+            color: var(--somber);
+            margin-bottom: 1rem;
+        }
+        .skill-text {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--faint-smoke);
+            font-style: italic;
+            opacity: 0.85;
+        }
+
+        /* ===== FOOTER / SITE OF GRACE ===== */
+        .grace-footer {
+            position: relative;
+            padding: 7rem 2rem 3rem;
+            text-align: center;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255,213,74,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, #0a0806 0%, #050403 100%);
+        }
+
+        .grace {
+            width: 40px;
+            height: 90px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+        }
+        .grace .flame {
+            position: absolute;
+            bottom: 0; left: 50%;
+            width: 6px; height: 60px;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, transparent, var(--radiant-gold), var(--erdtree-gold));
+            border-radius: 50% 50% 20% 20%;
+            filter: blur(1px);
+            animation: graceFlicker 2.5s ease-in-out infinite;
+        }
+        .grace .flame::before,
+        .grace .flame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 6px; height: 60px;
+            background: inherit;
+            border-radius: inherit;
+        }
+        .grace .flame::before { left: -18px; transform: rotate(-18deg); animation: graceFlicker 3.2s ease-in-out infinite reverse; }
+        .grace .flame::after  { right: -18px; transform: rotate(18deg); animation: graceFlicker 2.8s ease-in-out infinite; }
+        .grace .base {
+            position: absolute;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 40px; height: 5px;
+            background: linear-gradient(to right, transparent, var(--bronze), var(--aged-gold), var(--bronze), transparent);
+            filter: blur(0.5px);
+        }
+        @keyframes graceFlicker {
+            0%, 100% { transform: translateX(-50%) scaleY(1) scaleX(1); opacity: 0.9; }
+            50%      { transform: translateX(-50%) scaleY(1.15) scaleX(0.92); opacity: 1; }
+        }
+        .grace::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 200px; height: 120px;
+            background: radial-gradient(ellipse at bottom, rgba(255,213,74,0.25) 0%, transparent 70%);
+            filter: blur(15px);
+            animation: graceGlow 3s ease-in-out infinite;
+        }
+        @keyframes graceGlow {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+            50%      { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+
+        .footer-epitaph {
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.3em;
+            color: var(--aged-gold);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        .footer-quote {
+            max-width: 520px;
+            margin: 0 auto 2.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            line-height: 2;
+            color: var(--somber);
+        }
+        .footer-quote::before { content: '✦ '; color: var(--aged-gold); font-style: normal; }
+        .footer-quote::after  { content: ' ✦'; color: var(--aged-gold); font-style: normal; }
+
+        .footer-sign {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201,169,98,0.12);
+            max-width: 500px;
+            margin: 0 auto;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            color: var(--bronze);
+            text-transform: uppercase;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1100px) {
+            .weapon-card { grid-column: span 6; }
+            .weapon-card.featured { grid-column: span 12; grid-row: span 1; aspect-ratio: 16/10; }
+            .weapon-card.featured .weapon-info { right: 0; }
+            .lore-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .talisman { position: relative; top: 0; }
+            .skills-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 700px) {
+            .section-inner { padding: 4.5rem 1.3rem; }
+            .weapon-card { grid-column: span 12; aspect-ratio: 4/5; }
+            .weapon-card.featured { aspect-ratio: 4/5; }
+            .weapon-card.featured .weapon-info { padding: 2rem 1.5rem 1.6rem; }
+            .weapon-card.featured .weapon-name { font-size: 1.6rem; }
+            .skills-row { grid-template-columns: 1fr; gap: 1rem; }
+            .hero-eyebrow { letter-spacing: 0.4em; font-size: 0.65rem; }
+            .weapons-grid { gap: 1rem; }
+            .hero-lore::before, .hero-lore::after { margin: 0 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+    <img class="hero-bg"
+         src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Erdtree%20glowing%20golden%20giant%20tree%20dark%20fantasy%20lands%20between%20dramatic%20epic%20cinematic%20clouds%20ruins%20atmospheric&image_size=landscape_16_9"
+         alt="The Erdtree towering over the Lands Between">
+    <div class="hero-rune"></div>
+
+    <div class="hero-content">
+        <p class="hero-eyebrow reveal">Fellow Tarnished · Behold the Armaments</p>
+        <h1 class="hero-title reveal">ELDEN RING</h1>
+        <p class="hero-subtitle reveal">— Armaments of the Lands Between —</p>
+        <p class="hero-lore reveal">
+            Forged in the crucible of the Shattering, wielded by heroes and demigods alike. These are the blades that shaped fate.
+        </p>
+        <div class="hero-divider reveal">
+            <div class="line"></div>
+            <div class="rune"></div>
+            <div class="line"></div>
+        </div>
+    </div>
+
+    <div class="scroll-hint">
+        <span>Descend</span>
+        <div class="scroll-sword"></div>
+    </div>
+</section>
+
+<!-- ==================== WEAPONS GALLERY ==================== -->
+<section class="section-wrap weapons-section">
+    <div class="section-inner">
+        <p class="section-kicker reveal">Chapter I</p>
+        <h2 class="section-title reveal">Legendary Armaments</h2>
+        <p class="section-lead reveal">
+            The fabled weapons that remain from the age before the Shattering. Each bears the echo of a god, a hero, or a curse — and those who wield them shall walk the path of champions or monsters.
+        </p>
+
+        <div class="weapons-grid">
+
+            <!-- FEATURED: Moonlight Greatsword -->
+            <article class="weapon-card featured reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Dark%20Souls%20Moonlight%20Greatsword%20glowing%20blue%20crystal%20sword%20floating%20dramatic%20dark%20background%20magical%20runes%20fantasy%20weapon%20epic%20cinematic&image_size=landscape_16_9"
+                         alt="Dark Moon Greatsword">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Greatsword · Carian Legacy</div>
+                    <h3 class="weapon-name">Dark Moon Greatsword</h3>
+                    <div class="weapon-jp">暗月の大剣</div>
+                    <p class="weapon-desc">
+                        A fabled king's sword, wielded by the consort of a moon goddess. Its blade is imbued with the full chill of the dark moon — its light, a gift to those spurned by the Golden Order.
+                    </p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill magic">Arcane INT Scaling</span>
+                        <span class="stat-pill frost">Frostbite Buildup</span>
+                        <span class="stat-pill">Weight 6.5</span>
+                    </div>
+                    <a href="#" class="read-more">View Weapon Art</a>
+                </div>
+            </article>
+
+            <!-- Rivers of Blood -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Rivers%20of%20Blood%20katana%20crimson%20dripping%20red%20blade%20samurai%20fantasy%20dark%20background%20dramatic%20lighting%20weapon%20photography&image_size=portrait_4_3"
+                         alt="Rivers of Blood Katana">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Katana · Omen Bloody</div>
+                    <h3 class="weapon-name">Rivers of Blood</h3>
+                    <div class="weapon-jp">屍山血河</div>
+                    <p class="weapon-desc">Weapon of Okina, swordsman from the Land of Reeds. A cursed blade that revels in carnage, its crimson edge never dries.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill blood">Hemorrhage 50</span>
+                        <span class="stat-pill">DEX · ARC</span>
+                    </div>
+                    <a href="#" class="read-more">Corpse-Piler</a>
+                </div>
+            </article>
+
+            <!-- Sword of Night and Flame -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Sword%20of%20Night%20and%20Flame%20legendary%20sword%20purple%20fire%20magic%20glowing%20dark%20ornate%20fantasy%20weapon%20dramatic%20epic&image_size=portrait_4_3"
+                         alt="Sword of Night and Flame">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Straight Sword · Legendary</div>
+                    <h3 class="weapon-name">Sword of Night & Flame</h3>
+                    <div class="weapon-jp">夜と炎の剣</div>
+                    <p class="weapon-desc">A sword from the golden age of the Carian royal family, when sorcery and incantation were one and the same.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill magic">Night Comet</span>
+                        <span class="stat-pill heavy">Flame Sweep</span>
+                    </div>
+                    <a href="#" class="read-more">Dual Stance</a>
+                </div>
+            </article>
+
+            <!-- Blasphemous Blade -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Blasphemous%20Blade%20serpent%20greatsword%20gold%20serpent%20head%20coiled%20blade%20cursed%20dark%20fantasy%20dramatic%20lighting%20weapon&image_size=portrait_4_3"
+                         alt="Blasphemous Blade">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Greatsword · God-Devouring</div>
+                    <h3 class="weapon-name">Blasphemous Blade</h3>
+                    <div class="weapon-jp">冒涜の大剣</div>
+                    <p class="weapon-desc">A sacred weapon of the God-Devouring Serpent. Feasts upon souls and returns their essence to the wielder as healing flame.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill heavy">Taker's Flames</span>
+                        <span class="stat-pill">FAITH · STR</span>
+                    </div>
+                    <a href="#" class="read-more">Taker's Flame</a>
+                </div>
+            </article>
+
+            <!-- Starscourge Greatsword -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Starscourge%20Greatsword%20dual%20greatsword%20cracked%20meteoric%20stone%20glowing%20purple%20gravity%20magic%20ornate%20dark%20fantasy%20weapon&image_size=portrait_4_3"
+                         alt="Starscourge Greatsword">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Colossal Sword · Gravity</div>
+                    <h3 class="weapon-name">Starscourge Greatsword</h3>
+                    <div class="weapon-jp">星砕きの大剣</div>
+                    <p class="weapon-desc">The colossal greatswords of Starscourge Radahn, inlaid with meteorite. Pulls enemies from the heavens — or crushes them where they stand.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill heavy">Starcaller Cry</span>
+                        <span class="stat-pill magic">Gravity Wells</span>
+                    </div>
+                    <a href="#" class="read-more">Starcaller Cry</a>
+                </div>
+            </article>
+
+            <!-- Hand of Malenia -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Hand%20of%20Malenia%20prosthesis%20katana%20gold%20winged%20ornate%20silver%20delicate%20butterfly%20feminine%20dark%20fantasy%20legendary%20weapon%20dramatic&image_size=portrait_4_3"
+                         alt="Hand of Malenia">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Katana · Prosthesis</div>
+                    <h3 class="weapon-name">Hand of Malenia</h3>
+                    <div class="weapon-jp">マレニアの義手刀</div>
+                    <p class="weapon-desc">Blade built into Malenia's golden prosthesis. Its wielder blooms into a goddess of rot — if only for the briefest, most devastating moments.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill blood">Scarlet Rot</span>
+                        <span class="stat-pill">DEX · ARC</span>
+                    </div>
+                    <a href="#" class="read-more">Waterfowl Dance</a>
+                </div>
+            </article>
+
+            <!-- Sacred Relic Sword -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Sacred%20Relic%20Sword%20holy%20gold%20radiant%20divine%20light%20winged%20seraph%20ornate%20god%20slaying%20dark%20fantasy%20epic%20weapon&image_size=portrait_4_3"
+                         alt="Sacred Relic Sword">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Greatsword · Remembrance</div>
+                    <h3 class="weapon-name">Sacred Relic Sword</h3>
+                    <div class="weapon-jp">神聖な遺物の剣</div>
+                    <p class="weapon-desc">A sword forged from the flesh of the final Elden Lord. Its holy blade cleaves reality itself and leaves radiant gold in its wake.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill holy">Holy Damage</span>
+                        <span class="stat-pill">FAITH · STR</span>
+                    </div>
+                    <a href="#" class="read-more">Wave of Gold</a>
+                </div>
+            </article>
+
+            <!-- Morgott's Cursed Sword -->
+            <article class="weapon-card reveal">
+                <span class="corner tl"></span><span class="corner tr"></span>
+                <span class="corner bl"></span><span class="corner br"></span>
+                <div class="weapon-img">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Elden%20Ring%20Morgott%20Cursed%20Sword%20bloody%20thorn%20whip%20sword%20omen%20horn%20twisted%20cruel%20dark%20red%20black%20gothic%20weapon%20dramatic&image_size=portrait_4_3"
+                         alt="Morgott's Cursed Sword">
+                </div>
+                <div class="weapon-info">
+                    <div class="weapon-category">Curved Sword · Omen</div>
+                    <h3 class="weapon-name">Morgott's Cursed Sword</h3>
+                    <div class="weapon-jp">モルゴットの呪剣</div>
+                    <p class="weapon-desc">A cursed blade of hardened blood, wielded by the Veiled Monarch himself. Leaps through the air like a hunting beast and spills yet more blood.</p>
+                    <div class="weapon-stats">
+                        <span class="stat-pill blood">Bloodloss 55</span>
+                        <span class="stat-pill heavy">Cursed-Blood Slice</span>
+                    </div>
+                    <a href="#" class="read-more">Cursed-Blood Slice</a>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== LORE + TALISMAN ==================== -->
+<section class="section-wrap lore-section">
+    <div class="section-inner">
+        <p class="section-kicker reveal">Chapter II</p>
+        <h2 class="section-title reveal">Forge · Scaling · Soul</h2>
+
+        <div class="lore-grid">
+            <div class="lore-panel reveal">
+                <p class="drop">
+                    Every armament in the Lands Between carries with it a story. Some were forged by the astrologers of old, their blades tempered in moonlight. Others were quenched in the blood of gods — and drink still of any unwary wielder.
+                </p>
+                <p>
+                    The Smithing Hewg, chained deep within the Roundtable Hold, can raise a common longsword to legend — if fed enough <em>Smithing Stones</em>. But to awaken a weapon's true affinity, one must turn to <em>Ashes of War</em>: memories of battles past, granted form and affixed to one's chosen blade.
+                </p>
+                <p>
+                    A <em>Heavy</em> affinity rewards the stalwart knight, the barbarian warlord. <em>Keen</em> favors the lithe duelist. <em>Magic</em> sings to the Carian scholar, <em>Fire</em> roars for the Fire Monk, and <em>Holy</em> shines for those still faithful to the Golden Order. There are whispers too, of <em>Occult</em> and <em>Bleed</em> and <em>Poison</em> — affinities the Order would rather see buried.
+                </p>
+                <p>
+                    Choose well, Tarnished. A blade does not merely cut. It shapes the soul of its wielder.
+                </p>
+            </div>
+
+            <aside class="talisman reveal">
+                <p class="talisman-label">Weapon Affinity</p>
+                <h4 class="talisman-title">— Dark Moon Greatsword —</h4>
+
+                <div class="affinity-row">
+                    <span class="name">Strength</span>
+                    <div class="bars">
+                        <div class="bar fill"></div><div class="bar fill"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                </div>
+                <div class="affinity-row">
+                    <span class="name">Dexterity</span>
+                    <div class="bars">
+                        <div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                </div>
+                <div class="affinity-row">
+                    <span class="name">Intelligence</span>
+                    <div class="bars">
+                        <div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div>
+                    </div>
+                </div>
+                <div class="affinity-row">
+                    <span class="name">Faith</span>
+                    <div class="bars">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                </div>
+                <div class="affinity-row">
+                    <span class="name">Arcane</span>
+                    <div class="bars">
+                        <div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div><div class="bar fill"></div><div class="bar"></div>
+                    </div>
+                </div>
+
+                <div class="requirements">
+                    <p class="req-title">⟡ Attributes Required</p>
+                    <div class="req-grid">
+                        <div class="req-item met"><span>STR</span><span>16</span></div>
+                        <div class="req-item met"><span>DEX</span><span>11</span></div>
+                        <div class="req-item met"><span>INT</span><span>38</span></div>
+                        <div class="req-item"><span>FTH</span><span>—</span></div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ASHES OF WAR ==================== -->
+<section class="section-wrap skills-section">
+    <div class="section-inner">
+        <p class="section-kicker reveal">Chapter III</p>
+        <h2 class="section-title reveal">Ashes of War</h2>
+        <p class="section-lead reveal">
+            Echoes of warriors long fallen, given new life on the edge of a blade. Each Ash imprints upon a weapon a unique technique — and sometimes, a new destiny.
+        </p>
+
+        <div class="skills-row">
+
+            <article class="skill-card reveal">
+                <div class="skill-sigil">✦</div>
+                <h4 class="skill-name">Loretta's Slash</h4>
+                <p class="skill-type">Sorcery · Polearm</p>
+                <p class="skill-text">Leap forward and strike, leaving a trail of glintstone phantoms. A knight's technique, stolen from the Royal Moongazing Carian.</p>
+            </article>
+
+            <article class="skill-card reveal">
+                <div class="skill-sigil" style="color:var(--crimson);border-color:var(--crimson);">⚔</div>
+                <h4 class="skill-name">Bloodhound Step</h4>
+                <p class="skill-type">Bloodhound · Evasion</p>
+                <p class="skill-text">Perform a swift, arcing dodge that leaves foes grasping at empty air. Favored by knights who had outlived their honor.</p>
+            </article>
+
+            <article class="skill-card reveal">
+                <div class="skill-sigil" style="color:var(--erdtree-gold);border-color:var(--erdtree-gold);">☀</div>
+                <h4 class="skill-name">Sacred Blade</h4>
+                <p class="skill-type">Incantation · Holy</p>
+                <p class="skill-text">Imbue the armament with sacred light and fire a golden blade projectile. The faith of the Two Fingers, made manifest.</p>
+            </article>
+
+            <article class="skill-card reveal">
+                <div class="skill-sigil" style="color:var(--glintstone-blue);border-color:var(--glintstone-blue);">✧</div>
+                <h4 class="skill-name">Carian Grandeur</h4>
+                <p class="skill-type">Glintstone · Sorcery</p>
+                <p class="skill-text">Raise a towering sword of glintstone and bring it crashing down. A memory of a Carian princess who became a god-slayer.</p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER / SITE OF GRACE ==================== -->
+<footer class="grace-footer">
+    <div class="grace">
+        <div class="base"></div>
+        <div class="flame"></div>
+    </div>
+
+    <p class="footer-epitaph reveal">Site of Grace Discovered</p>
+    <blockquote class="footer-quote reveal">
+        This is the power of the runes. Bear it well — and use it wisely, in the name of the Golden Order.
+    </blockquote>
+    <p class="footer-sign reveal">© Forged in the Lands Between · In Honour of the Tarnished</p>
+</footer>
+
+<script>
+    // ========== REVEAL ON SCROLL ==========
+    const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('shown'), i * 60);
+                revealObs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ========== WEAPON CARD PARALLAX ON MOUSE ==========
+    document.querySelectorAll('.weapon-card').forEach(card => {
+        const img = card.querySelector('.weapon-img img');
+        if (!img) return;
+        card.addEventListener('mousemove', (e) => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            img.style.transform = `scale(1.1) translate(${x * 12}px, ${y * 12}px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            img.style.transform = '';
+        });
+    });
+
+    // ========== GOLD PARTICLE DUST OVER HERO ==========
+    (function dust() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+        for (let i = 0; i < 24; i++) {
+            const p = document.createElement('span');
+            Object.assign(p.style, {
+                position: 'absolute',
+                width: '2px', height: '2px',
+                borderRadius: '50%',
+                background: 'var(--radiant-gold)',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                opacity: (Math.random() * 0.6 + 0.2).toString(),
+                boxShadow: '0 0 6px var(--erdtree-gold)',
+                animation: `floatDust ${8 + Math.random() * 10}s ease-in-out ${Math.random() * 8}s infinite`,
+                zIndex: 2
+            });
+            hero.appendChild(p);
+        }
+        const key = document.createElement('style');
+        key.textContent = `@keyframes floatDust {
+            0%   { transform: translate(0,0) scale(1); opacity: 0.1; }
+            20%  { opacity: 0.8; }
+            50%  { transform: translate(${10 + Math.random()*40}px, ${-40 - Math.random()*60}px) scale(1.3); }
+            80%  { opacity: 0.5; }
+            100% { transform: translate(${-20 + Math.random()*30}px, ${-120 - Math.random()*40}px) scale(0.6); opacity: 0; }
+        }`;
+        document.head.appendChild(key);
+    })();
+</script>
+
+</body>
+</html>

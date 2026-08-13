@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lens & Latitude — A Photographic Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+JP:wght@300;400;600&family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ============ BASE ============ */
+  :root{
+    --bg:#0d0d10;
+    --bg-soft:#15151a;
+    --fg:#f2ede4;
+    --muted:#8a857d;
+    --accent:#c9a86a;
+    --accent-soft:rgba(201,168,106,.15);
+    --line:rgba(242,237,228,.12);
+    --display:'Cormorant Garamond', serif;
+    --body:'Inter', sans-serif;
+    --local:'Noto Serif JP', serif;
+    --transition:.7s cubic-bezier(.22,.61,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--body);
+    font-weight:300;
+    line-height:1.7;
+    overflow-x:hidden;
+    transition:background var(--transition), color var(--transition);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{display:block;max-width:100%}
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  /* ============ LOADER ============ */
+  #loader{
+    position:fixed;inset:0;background:#0a0a0d;z-index:9999;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:1.5rem;
+    transition:opacity 1s ease, visibility 1s ease;
+  }
+  #loader.hidden{opacity:0;visibility:hidden}
+  .loader-mark{
+    font-family:var(--display);font-size:2rem;letter-spacing:.4em;
+    color:var(--accent);text-transform:uppercase;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  .loader-bar{
+    width:180px;height:1px;background:var(--line);overflow:hidden;position:relative;
+  }
+  .loader-bar::after{
+    content:'';position:absolute;inset:0;background:var(--accent);
+    transform:translateX(-100%);animation:load 1.6s ease-in-out infinite;
+  }
+  @keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+  /* ============ NAV ============ */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.5rem 3rem;
+    backdrop-filter:blur(20px) saturate(140%);
+    background:rgba(13,13,16,.55);
+    border-bottom:1px solid var(--line);
+    transition:background var(--transition);
+  }
+  .brand{
+    font-family:var(--display);font-size:1.25rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--fg);
+  }
+  .brand span{color:var(--accent);transition:color var(--transition)}
+  .nav-links{display:flex;gap:2.2rem;list-style:none}
+  .nav-links a{
+    color:var(--muted);text-decoration:none;font-size:.72rem;
+    letter-spacing:.22em;text-transform:uppercase;
+    transition:color .3s ease;position:relative;
+  }
+  .nav-links a:hover,.nav-links a.active{color:var(--fg)}
+  .nav-links a.active::after{
+    content:'';position:absolute;left:0;right:0;bottom:-6px;height:1px;
+    background:var(--accent);transition:background var(--transition);
+  }
+
+  /* ============ HERO ============ */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;
+    justify-content:center;padding:8rem 3rem 4rem;
+    position:relative;overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;opacity:.32;
+    background-size:cover;background-position:center;
+    transition:opacity 1.2s ease, background-image .6s ease;
+    filter:saturate(.85) contrast(1.05);
+  }
+  .hero-bg::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(13,13,16,.4) 0%, rgba(13,13,16,.75) 60%, var(--bg) 100%);
+  }
+  .hero-content{position:relative;z-index:2;max-width:900px}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:.8rem;
+    font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:2rem;
+    transition:color var(--transition);
+  }
+  .hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--accent);transition:background var(--transition)}
+  .hero h1{
+    font-family:var(--display);font-weight:300;
+    font-size:clamp(3rem, 8vw, 6.5rem);
+    line-height:1.02;letter-spacing:-.02em;margin-bottom:1.5rem;
+  }
+  .hero h1 em{font-style:italic;color:var(--accent);transition:color var(--transition)}
+  .hero p{
+    font-size:1.05rem;color:var(--muted);max-width:560px;
+    margin-bottom:2.5rem;font-weight:300;
+  }
+  .hero-meta{
+    display:flex;gap:3rem;font-size:.72rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .hero-meta span strong{display:block;color:var(--fg);font-weight:500;margin-top:.4rem;font-family:var(--display);font-size:1.1rem;letter-spacing:.05em}
+
+  /* ============ COUNTRY SELECTOR ============ */
+  .selector{
+    padding:5rem 3rem 2rem;display:flex;flex-direction:column;align-items:center;
+    border-top:1px solid var(--line);position:relative;
+  }
+  .selector-label{
+    font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:2.5rem;
+  }
+  .country-buttons{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:.8rem;
+    max-width:1100px;
+  }
+  .country-btn{
+    background:transparent;border:1px solid var(--line);
+    color:var(--muted);padding:.85rem 1.8rem;
+    font-family:var(--body);font-size:.78rem;letter-spacing:.18em;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .4s ease;border-radius:2px;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  .country-btn .dot{
+    width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;
+  }
+  .country-btn:hover{color:var(--fg);border-color:var(--fg)}
+  .country-btn.active{
+    background:var(--accent);color:var(--bg);border-color:var(--accent);
+    box-shadow:0 8px 30px -8px var(--accent);
+  }
+  .country-btn.active .dot{background:var(--bg);opacity:1}
+
+  /* ============ SHOWCASE ============ */
+  .showcase{
+    padding:4rem 3rem 8rem;min-height:80vh;
+    transition:opacity .5s ease;
+  }
+  .showcase.fade{opacity:0}
+  .showcase-inner{max-width:1280px;margin:0 auto}
+
+  .country-header{
+    display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end;
+    padding-bottom:3rem;border-bottom:1px solid var(--line);margin-bottom:4rem;
+  }
+  .country-title-block .local{
+    font-family:var(--local);font-size:1.6rem;color:var(--accent);
+    letter-spacing:.15em;margin-bottom:.6rem;
+    transition:color var(--transition);opacity:.85;
+  }
+  .country-title-block h2{
+    font-family:var(--display);font-weight:300;
+    font-size:clamp(2.5rem, 6vw, 4.5rem);line-height:1;letter-spacing:-.02em;
+  }
+  .country-title-block h2 em{font-style:italic;color:var(--accent);transition:color var(--transition)}
+  .country-meta{
+    text-align:right;font-size:.72rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);line-height:2;
+  }
+  .country-meta strong{color:var(--fg);font-weight:500}
+
+  .country-poem{
+    font-family:var(--display);font-style:italic;font-size:1.5rem;
+    color:var(--fg);opacity:.85;max-width:600px;margin:0 auto 1.5rem;
+    text-align:center;line-height:1.6;
+  }
+  .country-poem::before,.country-poem::after{
+    content:'';display:block;width:40px;height:1px;background:var(--accent);
+    margin:1.5rem auto;transition:background var(--transition);
+  }
+  .country-desc{
+    max-width:680px;margin:0 auto 4rem;text-align:center;
+    color:var(--muted);font-size:1rem;line-height:1.9;
+  }
+
+  /* ============ GALLERY ============ */
+  .gallery{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+    margin-bottom:4rem;
+  }
+  .gallery-item{
+    position:relative;overflow:hidden;border-radius:3px;
+    background:var(--bg-soft);cursor:pointer;
+    aspect-ratio:4/5;
+  }
+  .gallery-item:first-child{aspect-ratio:4/5;grid-row:span 2}
+  .gallery-item img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform 1.2s cubic-bezier(.22,.61,.36,1), filter .6s ease;
+    filter:saturate(.9) contrast(1.02);
+  }
+  .gallery-item:hover img{transform:scale(1.06);filter:saturate(1.1) contrast(1.05)}
+  .gallery-item::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,.75) 100%);
+    opacity:0;transition:opacity .5s ease;pointer-events:none;
+  }
+  .gallery-item:hover::after{opacity:1}
+  .gallery-caption{
+    position:absolute;left:1.4rem;bottom:1.2rem;right:1.4rem;z-index:2;
+    opacity:0;transform:translateY(10px);transition:all .5s ease;
+  }
+  .gallery-item:hover .gallery-caption{opacity:1;transform:translateY(0)}
+  .gallery-caption .num{
+    font-family:var(--display);font-size:.8rem;color:var(--accent);
+    letter-spacing:.3em;margin-bottom:.4rem;
+  }
+  .gallery-caption h3{
+    font-family:var(--display);font-size:1.4rem;font-weight:400;
+    color:#fff;margin-bottom:.3rem;
+  }
+  .gallery-caption p{font-size:.78rem;color:rgba(255,255,255,.7);letter-spacing:.05em}
+
+  /* ============ COUNTRY FOOTER NOTE ============ */
+  .country-note{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:2.5rem;border-top:1px solid var(--line);
+    font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  }
+  .country-note .signature{font-family:var(--display);font-style:italic;text-transform:none;letter-spacing:.02em;font-size:1rem;color:var(--fg);opacity:.7}
+
+  /* ============ LIGHTBOX ============ */
+  .lightbox{
+    position:fixed;inset:0;z-index:1000;background:rgba(8,8,10,.96);
+    display:flex;align-items:center;justify-content:center;padding:3rem;
+    opacity:0;visibility:hidden;transition:opacity .4s ease, visibility .4s ease;
+    backdrop-filter:blur(10px);
+  }
+  .lightbox.open{opacity:1;visibility:visible}
+  .lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:2px}
+  .lightbox-close{
+    position:absolute;top:2rem;right:2.5rem;
+    background:none;border:none;color:var(--fg);cursor:pointer;
+    font-size:1.5rem;width:44px;height:44px;
+    border:1px solid var(--line);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s ease;
+  }
+  .lightbox-close:hover{border-color:var(--accent);color:var(--accent);transform:rotate(90deg)}
+  .lightbox-caption{
+    position:absolute;bottom:2rem;left:0;right:0;text-align:center;
+    color:var(--muted);font-size:.85rem;letter-spacing:.15em;
+  }
+
+  /* ============ FOOTER ============ */
+  footer{
+    padding:5rem 3rem 3rem;border-top:1px solid var(--line);
+    text-align:center;
+  }
+  footer .foot-mark{
+    font-family:var(--display);font-size:1.8rem;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:1rem;
+    transition:color var(--transition);
+  }
+  footer p{color:var(--muted);font-size:.78rem;letter-spacing:.1em;margin-bottom:.5rem}
+  footer .copyright{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--line)}
+
+  /* ============ COUNTRY THEMES ============ */
+  /* JAPAN — minimalist ink + sakura */
+  body[data-country="japan"]{
+    --bg:#0e0e10;--bg-soft:#18181c;--fg:#ece8df;--muted:#7e7a72;
+    --accent:#d4889a;--accent-soft:rgba(212,136,154,.15);
+    --display:'Noto Serif JP', serif;--local:'Noto Serif JP', serif;
+  }
+  /* ICELAND — glacial blue */
+  body[data-country="iceland"]{
+    --bg:#0a0f14;--bg-soft:#101820;--fg:#e6eef4;--muted:#6b8090;
+    --accent:#7fb8d4;--accent-soft:rgba(127,184,212,.15);
+    --display:'Cormorant Garamond', serif;--local:'Inter', sans-serif;
+  }
+  /* MOROCCO — terracotta + teal */
+  body[data-country="morocco"]{
+    --bg:#16100c;--bg-soft:#1f1812;--fg:#f0e4d2;--muted:#9a8270;
+    --accent:#d6824a;--accent-soft:rgba(214,130,74,.15);
+    --display:'Playfair Display', serif;--local:'Cinzel', serif;
+  }
+  /* ITALY — renaissance gold */
+  body[data-country="italy"]{
+    --bg:#14110b;--bg-soft:#1c1810;--fg:#f2ead8;--muted:#968a72;
+    --accent:#d4af5f;--accent-soft:rgba(212,175,95,.15);
+    --display:'Playfair Display', serif;--local:'Cormorant Garamond', serif;
+  }
+  /* INDIA — saffron + jewel */
+  body[data-country="india"]{
+    --bg:#120a0a;--bg-soft:#1b1010;--fg:#f4e6d8;--muted:#9c7a6a;
+    --accent:#e0913a;--accent-soft:rgba(224,145,58,.15);
+    --display:'Playfair Display', serif;--local:'Cinzel', serif;
+  }
+  /* FRANCE — rose + charcoal */
+  body[data-country="france"]{
+    --bg:#0f0d0e;--bg-soft:#171416;--fg:#efe6e0;--muted:#8a7e7c;
+    --accent:#c98a9a;--accent-soft:rgba(201,138,154,.15);
+    --display:'Cormorant Garamond', serif;--local:'Playfair Display', serif;
+  }
+
+  /* ============ ANIMATIONS ============ */
+  .reveal{opacity:0;transform:translateY(30px);transition:all 1s cubic-bezier(.22,.61,.36,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:900px){
+    nav{padding:1.2rem 1.5rem}
+    .nav-links{display:none}
+    .hero{padding:7rem 1.5rem 3rem}
+    .selector{padding:4rem 1.5rem 2rem}
+    .showcase{padding:3rem 1.5rem 5rem}
+    .country-header{grid-template-columns:1fr;gap:1rem}
+    .country-meta{text-align:left}
+    .gallery{grid-template-columns:1fr 1fr;gap:1rem}
+    .gallery-item:first-child{grid-row:span 1}
+    .country-note{flex-direction:column;gap:1rem;text-align:center}
+    .hero-meta{flex-wrap:wrap;gap:1.5rem}
+    footer{padding:4rem 1.5rem 2rem}
+  }
+  @media (max-width:560px){
+    .gallery{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body data-country="japan">
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-mark">Lens &amp; Latitude</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand">Lens <span>&amp;</span> Latitude</div>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active">Origin</a></li>
+      <li><a href="#selector">Atlas</a></li>
+      <li><a href="#showcase">Frames</a></li>
+      <li><a href="#footer">Field Notes</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">A Photographic Journal · Vol. I</div>
+      <h1>Where light <em>meets</em><br>latitude.</h1>
+      <p>Six countries. Six palettes of light. A wandering lens tracing the quiet character of place — from cherry-scented temples to aurora-lit glaciers, from spice-stained medinas to lavender horizons.</p>
+      <div class="hero-meta">
+        <span>Destinations <strong id="heroDest">6</strong></span>
+        <span>Frames <strong id="heroFrames">18</strong></span>
+        <span>Now Viewing <strong id="heroNow">Japan</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTOR -->
+  <section class="selector" id="selector">
+    <div class="selector-label">Choose a Country</div>
+    <div class="country-buttons" id="countryButtons"></div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="showcase" id="showcase">
+    <div class="showcase-inner" id="showcaseInner"></div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="foot-mark">Lens &amp; Latitude</div>
+    <p>A photographic journal of light, land, and silence.</p>
+    <p>Captured across six latitudes — one frame at a time.</p>
+    <div class="copyright">© 2026 Lens &amp; Latitude · All Frames Reserved</div>
+  </footer>
+
+<script>
+/* ============ DATA ============ */
+const IMG_BASE = "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=";
+const SIZE_HERO = "&image_size=landscape_16_9";
+const SIZE_GAL = "&image_size=landscape_4_3";
+
+function img(prompt, hero=false){
+  return IMG_BASE + encodeURIComponent(prompt) + (hero ? SIZE_HERO : SIZE_GAL);
+}
+
+const countries = {
+  japan: {
+    name: "Japan",
+    local: "日本",
+    tagline: "Land of the Rising Sun",
+    coords: "35.68°N · 139.69°E",
+    region: "East Asia",
+    poem: "A petal falls —<br>the temple bell<br>still ringing.",
+    desc: "A country where silence has texture. From the misted steps of Kyoto shrines to the snow-laced shoulders of Fuji-san, Japan photographs itself in soft breaths of pink and ink-black shadow.",
+    hero: "Japanese temple with cherry blossoms in full bloom, pagoda silhouette, soft pink petals falling, misty morning light, photorealistic cinematic travel photography, shallow depth of field",
+    images: [
+      { src: "Serene Japanese Buddhist temple with cherry blossoms, traditional pagoda, soft pink petals falling, misty morning, photorealistic travel photography", title: "Sakura Vigil", loc: "Kyoto" },
+      { src: "Mount Fuji at sunrise with cherry blossom foreground, snow-capped peak, gradient pink to blue sky, golden hour, photorealistic landscape", title: "Fuji at First Light", loc: "Hakone" },
+      { src: "Historic Kyoto street at dusk, wooden machiya houses, glowing red lanterns, cobblestone path, atmospheric mist, photorealistic", title: "Lantern Hour", loc: "Gion, Kyoto" }
+    ]
+  },
+  iceland: {
+    name: "Iceland",
+    local: "Ísland",
+    tagline: "Realm of Fire & Ice",
+    coords: "64.96°N · 19.02°W",
+    region: "North Atlantic",
+    poem: "The green sky bends —<br>glaciers remember<br>every silence.",
+    desc: "A land carved by elements that do not negotiate. Volcanic plains, basalt cathedrals, and skies that ignite in ribbons of green. Here, the lens learns humility before scale.",
+    hero: "Aurora borealis over Icelandic glacier landscape, dancing green and purple northern lights, snow mountains, frozen lake reflection, long exposure, photorealistic",
+    images: [
+      { src: "Aurora borealis over Iceland, vivid green and purple northern lights dancing, snow-covered mountains, frozen lake reflection, starry sky, long exposure photorealistic", title: "Borealis", loc: "Jökulsárlón" },
+      { src: "Iceland glacier lagoon with floating blue icebergs, dramatic overcast sky, ethereal blue tones, Vatnajokull, photorealistic landscape", title: "Blue Sermon", loc: "Vatnajökull" },
+      { src: "Reynisfjara black sand beach Iceland, basalt columns, crashing waves, moody overcast sky, photorealistic dramatic landscape", title: "Black Cathedral", loc: "Reynisfjara" }
+    ]
+  },
+  morocco: {
+    name: "Morocco",
+    local: "المغرب",
+    tagline: "Where Sahara Meets Sea",
+    coords: "31.79°N · 7.09°W",
+    region: "North Africa",
+    poem: "Spice and sand —<br>the medina hums<br>in ochre light.",
+    desc: "A country in amber. Marrakech bleeds saffron and indigo; the Sahara whispers in dunes; Chefchaouen dreams entirely in blue. Every alley is a frame already composed.",
+    hero: "Marrakech medina narrow alley, vibrant spice markets, hanging metal lanterns, warm orange light, intricate mosaic tilework, photorealistic atmospheric travel photography",
+    images: [
+      { src: "Marrakech medina narrow alley, vibrant spice market, hanging lanterns, warm orange light, intricate tilework, photorealistic travel photography", title: "Spire of Saffron", loc: "Marrakech" },
+      { src: "Sahara desert dunes at sunset, camel caravan silhouette, golden orange sand, footprints, photorealistic cinematic landscape", title: "Caravan at Dusk", loc: "Merzouga" },
+      { src: "Chefchaouen blue city Morocco, narrow blue painted street, cascading blue buildings, potted plants, photorealistic", title: "The Blue Dream", loc: "Chefchaouen" }
+    ]
+  },
+  italy: {
+    name: "Italy",
+    local: "Italia",
+    tagline: "Cradle of the Renaissance",
+    coords: "41.90°N · 12.50°E",
+    region: "Southern Europe",
+    poem: "Golden stone —<br>the canal holds<br>a thousand years.",
+    desc: "Light here moves like a painter. Tuscan hills roll in cypress and wheat; Venice glows on water; Rome endures in marble and dusk. Italy is photography's oldest collaborator.",
+    hero: "Venice grand canal at sunset, historic palazzos, gondola silhouette, golden reflections on water, romantic photorealistic travel photography, warm light",
+    images: [
+      { src: "Venice grand canal at sunset, historic palazzos, gondola, golden reflections on water, romantic, photorealistic travel photography", title: "Liquid Gold", loc: "Venice" },
+      { src: "Tuscan countryside rolling hills with cypress trees, golden wheat fields, stone farmhouse, warm sunset light, photorealistic landscape", title: "Tuscan Hymn", loc: "Val d'Orcia" },
+      { src: "Roman Colosseum at twilight, ancient stone architecture, dramatic sky, warm golden lights, photorealistic atmospheric", title: "Eternal Echo", loc: "Rome" }
+    ]
+  },
+  india: {
+    name: "India",
+    local: "भारत",
+    tagline: "A Continent of Color",
+    coords: "20.59°N · 78.96°E",
+    region: "South Asia",
+    poem: "Marble and marigold —<br>the river carries<br>a thousand prayers.",
+    desc: "A subcontinent of saturated grace. The Taj Mahal breathes in dawn mist; Varanasi burns with incense and offering; Jaipur blushes in Rajput pink. Here, devotion is a color.",
+    hero: "Taj Mahal at sunrise, white marble reflecting in long pool, misty morning, soft pink sky, golden hour, photorealistic iconic travel photography",
+    images: [
+      { src: "Taj Mahal at sunrise, white marble reflecting in pool, misty morning, pink sky, golden hour, photorealistic iconic travel photography", title: "Tear on Marble", loc: "Agra" },
+      { src: "Varanasi ghats at dawn, Ganges river, temple spires, golden light, incense smoke, boats, spiritual photorealistic", title: "River of Hymns", loc: "Varanasi" },
+      { src: "Jaipur Amber Fort pink city, intricate Rajput architecture, warm sunset light, majestic, photorealistic travel photography", title: "The Pink Throne", loc: "Jaipur" }
+    ]
+  },
+  france: {
+    name: "France",
+    local: "France",
+    tagline: "Light, Love & Lavender",
+    coords: "46.23°N · 2.21°E",
+    region: "Western Europe",
+    poem: "A lavender field —<br>the hour dissolves<br>into gold.",
+    desc: "France taught the lens romance. Paris whispers at golden hour; Provence drowns in violet rows; the Riviera shimmers in pastel and sea-glass. Every frame is an elegy to slow light.",
+    hero: "Eiffel Tower Paris at sunset, romantic skyline, golden hour, Seine river, soft warm light, photorealistic cinematic travel photography",
+    images: [
+      { src: "Eiffel Tower Paris at sunset, romantic skyline, golden hour, Seine river, soft warm light, photorealistic travel photography", title: "L'Heure Dorée", loc: "Paris" },
+      { src: "Provence lavender fields at sunset, purple rows, stone farmhouse, golden light, dreamy, photorealistic landscape", title: "Violet Hours", loc: "Provence" },
+      { src: "French Riviera coastal village, pastel buildings, Mediterranean blue sea, yachts, sunny day, photorealistic travel photography", title: "Côte d'Azur", loc: "Nice" }
+    ]
+  }
+};
+
+/* ============ RENDER ============ */
+const buttonsEl = document.getElementById('countryButtons');
+const showcaseEl = document.getElementById('showcaseInner');
+const heroBg = document.getElementById('heroBg');
+const heroNow = document.getElementById('heroNow');
+
+// Build buttons
+Object.entries(countries).forEach(([key, c]) => {
+  const btn = document.createElement('button');
+  btn.className = 'country-btn';
+  btn.dataset.country = key;
+  btn.innerHTML = `<span class="dot"></span>${c.name}`;
+  btn.addEventListener('click', () => selectCountry(key));
+  buttonsEl.appendChild(btn);
+});
+
+/* italicize the last word of a country name for elegant typography */
+function formatTitle(name){
+  const parts = name.split(' ');
+  if(parts.length === 1) return name;
+  return parts.map((p,i)=> i===parts.length-1 ? `<em>${p}</em>` : p).join(' ');
+}
+
+function selectCountry(key){
+  const c = countries[key];
+  if(!c) return;
+
+  // theme
+  document.body.dataset.country = key;
+
+  // active button
+  document.querySelectorAll('.country-btn').forEach(b => b.classList.toggle('active', b.dataset.country === key));
+
+  // hero
+  heroBg.style.backgroundImage = `url('${img(c.hero, true)}')`;
+  heroNow.textContent = c.name;
+
+  // fade showcase then re-render
+  showcaseEl.parentElement.classList.add('fade');
+  setTimeout(() => {
+    renderShowcase(c, key);
+    showcaseEl.parentElement.classList.remove('fade');
+    observeReveals();
+  }, 350);
+}
+
+function renderShowcase(c, key){
+  const galleryHTML = c.images.map((im, i) => `
+    <div class="gallery-item reveal" data-img="${img(im.src)}" data-title="${im.title}" data-loc="${im.loc}">
+      <img src="${img(im.src)}" alt="${im.title} — ${im.loc}" loading="lazy">
+      <div class="gallery-caption">
+        <div class="num">No. ${String(i+1).padStart(2,'0')}</div>
+        <h3>${im.title}</h3>
+        <p>${im.loc}</p>
+      </div>
+    </div>
+  `).join('');
+
+  showcaseEl.innerHTML = `
+    <div class="country-header reveal">
+      <div class="country-title-block">
+        <div class="local">${c.local}</div>
+        <h2>${formatTitle(c.name)}</h2>
+      </div>
+      <div class="country-meta">
+        <div>${c.tagline}</div>
+        <div><strong>${c.region}</strong></div>
+        <div>${c.coords}</div>
+      </div>
+    </div>
+
+    <div class="country-poem reveal">${c.poem}</div>
+    <p class="country-desc reveal">${c.desc}</p>
+
+    <div class="gallery">${galleryHTML}</div>
+
+    <div class="country-note reveal">
+      <span>Series · ${c.name} / 03 Frames</span>
+      <span class="signature">— shot on latitude</span>
+    </div>
+  `;
+
+  showcaseEl.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => openLightbox(item.dataset.img, item.dataset.title, item.dataset.loc));
+  });
+};
+
+/* ============ LIGHTBOX ============ */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+const lightboxClose = document.getElementById('lightboxClose');
+
+function openLightbox(src, title, loc){
+  lightboxImg.src = src;
+  lightboxCaption.textContent = `${title} · ${loc}`;
+  lightbox.classList.add('open');
+}
+function closeLightbox(){ lightbox.classList.remove('open'); }
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+
+/* ============ REVEAL OBSERVER ============ */
+let revealObserver;
+function observeReveals(){
+  if(!revealObserver){
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+  }
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+}
+
+/* ============ NAV ACTIVE STATE ============ */
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = ['hero','selector','showcase','footer'].map(id => document.getElementById(id));
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const id = e.target.id;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => s && navObserver.observe(s));
+
+/* ============ INIT ============ */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 600);
+  selectCountry('japan');
+  observeReveals();
+});
+</script>
+</body>
+</html>

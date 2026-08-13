@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夜的独白 | Solitude</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight: #0a0e1a;
+            --deep-blue: #141b2d;
+            --misty-blue: #2a3a5c;
+            --slate-gray: #4a5568;
+            --soft-silver: #a0aec0;
+            --pale-lavender: #c9b8d9;
+            --dusty-rose: #b8a0a8;
+            --warm-gray: #d4cfc8;
+            --cream: #f0ebe3;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: var(--midnight);
+            color: var(--warm-gray);
+            line-height: 1.9;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--midnight);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--misty-blue);
+            border-radius: 3px;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(10, 14, 26, 0.3) 0%,
+                rgba(10, 14, 26, 0.6) 50%,
+                rgba(10, 14, 26, 0.95) 100%
+            );
+            z-index: 2;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.5) saturate(0.8);
+            animation: slowZoom 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            letter-spacing: 0.4em;
+            color: var(--pale-lavender);
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: var(--cream);
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-title .char {
+            display: inline-block;
+            animation: floatText 4s ease-in-out infinite;
+        }
+        .hero-title .char:nth-child(2) { animation-delay: 0.1s; }
+        .hero-title .char:nth-child(3) { animation-delay: 0.2s; }
+        .hero-title .char:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .hero-quote {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            line-height: 2;
+            color: var(--soft-silver);
+            opacity: 0.85;
+        }
+
+        .hero-quote::before {
+            content: '「';
+            color: var(--dusty-rose);
+            margin-right: 0.3em;
+        }
+        .hero-quote::after {
+            content: '」';
+            color: var(--dusty-rose);
+            margin-left: 0.3em;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator span {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            color: var(--soft-silver);
+            opacity: 0.7;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, var(--soft-silver), transparent);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+            50% { transform: translateX(-50%) translateY(10px); opacity: 1; }
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.5em;
+            color: var(--dusty-rose);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 50px;
+            height: 1px;
+            background: var(--dusty-rose);
+            opacity: 0.6;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 400;
+            color: var(--cream);
+            margin-bottom: 3rem;
+            letter-spacing: 0.08em;
+            line-height: 1.5;
+        }
+
+        .poetry-section {
+            background: linear-gradient(180deg, var(--midnight) 0%, var(--deep-blue) 100%);
+        }
+
+        .poetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .poetry-text {
+            padding: 2rem 0;
+        }
+
+        .poem {
+            font-size: 1.1rem;
+            line-height: 2.4;
+            color: var(--warm-gray);
+            margin-bottom: 2rem;
+        }
+
+        .poem-line {
+            display: block;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.8s ease;
+        }
+        .poem-line.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .poem-author {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--pale-lavender);
+            letter-spacing: 0.2em;
+        }
+
+        .poetry-image {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .poetry-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(10, 14, 26, 0.2) 0%,
+                transparent 50%,
+                rgba(10, 14, 26, 0.4) 100%
+            );
+        }
+
+        .poetry-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) brightness(0.85) contrast(1.05);
+            transition: transform 8s ease;
+        }
+        .poetry-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-section {
+            background: var(--deep-blue);
+            padding: 8rem 2rem;
+        }
+
+        .gallery-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 120px;
+            gap: 1.2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 40%,
+                rgba(10, 14, 26, 0.85) 100%
+            );
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8) saturate(0.75);
+            transition: transform 1.2s ease, filter 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+            filter: brightness(0.95) saturate(0.9);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            z-index: 3;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .gallery-caption h4 {
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--cream);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-caption p {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--soft-silver);
+        }
+
+        .item-1 { grid-column: span 7; grid-row: span 3; }
+        .item-2 { grid-column: span 5; grid-row: span 2; }
+        .item-3 { grid-column: span 5; grid-row: span 2; }
+        .item-4 { grid-column: span 4; grid-row: span 2; }
+        .item-5 { grid-column: span 4; grid-row: span 2; }
+        .item-6 { grid-column: span 4; grid-row: span 2; }
+
+        .letter-section {
+            background: linear-gradient(180deg, var(--deep-blue) 0%, var(--midnight) 100%);
+        }
+
+        .letter-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            background: rgba(240, 235, 227, 0.03);
+            border: 1px solid rgba(201, 184, 217, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            border: 1px solid rgba(201, 184, 217, 0.08);
+            pointer-events: none;
+        }
+
+        .letter-date {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--dusty-rose);
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+        }
+
+        .letter-salutation {
+            font-size: 1.2rem;
+            color: var(--cream);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .letter-body {
+            font-size: 1rem;
+            line-height: 2.3;
+            color: var(--warm-gray);
+            margin-bottom: 2rem;
+            text-indent: 2em;
+        }
+
+        .letter-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .letter-sign-off {
+            text-align: right;
+            margin-top: 3rem;
+        }
+
+        .letter-sign-off .closing {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--pale-lavender);
+            margin-bottom: 0.5rem;
+        }
+
+        .letter-sign-off .signature {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--cream);
+            letter-spacing: 0.1em;
+        }
+
+        .quotes-section {
+            background: var(--midnight);
+            padding: 8rem 2rem;
+        }
+
+        .quotes-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .quote-card {
+            padding: 3rem 2rem;
+            background: rgba(42, 58, 92, 0.15);
+            border: 1px solid rgba(160, 174, 192, 0.08);
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .quote-card:hover {
+            background: rgba(42, 58, 92, 0.25);
+            border-color: rgba(201, 184, 217, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem;
+            left: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            line-height: 1;
+            color: var(--dusty-rose);
+            opacity: 0.3;
+        }
+
+        .quote-text {
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--warm-gray);
+            margin-bottom: 1.5rem;
+            padding-top: 1.5rem;
+        }
+
+        .quote-author {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--pale-lavender);
+            letter-spacing: 0.15em;
+        }
+
+        .footer {
+            position: relative;
+            padding: 6rem 2rem 3rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at center top,
+                rgba(42, 58, 92, 0.3) 0%,
+                transparent 70%
+            );
+        }
+
+        .stars {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--cream);
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--pale-lavender);
+            letter-spacing: 0.3em;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-text {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            font-size: 0.9rem;
+            line-height: 2;
+            color: var(--soft-silver);
+            opacity: 0.8;
+        }
+
+        .divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--dusty-rose), transparent);
+            margin: 0 auto 2rem;
+        }
+
+        .copyright {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--slate-gray);
+        }
+
+        @media (max-width: 900px) {
+            .poetry-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .gallery-grid {
+                grid-auto-rows: 100px;
+            }
+            .item-1, .item-2, .item-3, .item-4, .item-5, .item-6 {
+                grid-column: span 12;
+                grid-row: span 2;
+            }
+            .item-1 { grid-row: span 3; }
+
+            .quotes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 5rem 1.5rem;
+            }
+
+            .letter-container {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-subtitle {
+                font-size: 0.9rem;
+                letter-spacing: 0.3em;
+            }
+            .hero-quote {
+                font-size: 1rem;
+            }
+            .section-title {
+                margin-bottom: 2rem;
+            }
+            .gallery-grid {
+                gap: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <img class="hero-bg" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=moonlit%20ocean%20waves%20at%20night%20dark%20blue%20serene%20melancholy%20peaceful%20long%20exposure%20photography&image_size=landscape_16_9" alt="月光下的海面">
+        <div class="hero-content">
+            <p class="hero-subtitle fade-in">— SOLITUDE · 独 处 —</p>
+            <h1 class="hero-title fade-in">
+                <span class="char">夜</span>
+                <span class="char">的</span>
+                <span class="char">独</span>
+                <span class="char">白</span>
+            </h1>
+            <p class="hero-quote fade-in">
+                在最深的夜里，我们终于遇见了自己。<br>
+                那些未曾说出口的话，都化作了星光。
+            </p>
+        </div>
+        <div class="scroll-indicator">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <section class="poetry-section">
+        <div class="section">
+            <div class="section-label fade-in">Chapter · 壹</div>
+            <h2 class="section-title fade-in">月光落在左手上</h2>
+
+            <div class="poetry-grid">
+                <div class="poetry-text fade-in">
+                    <div class="poem">
+                        <span class="poem-line">我偏爱诗人的天性，</span>
+                        <span class="poem-line">偏爱他们把月光酿成酒，</span>
+                        <span class="poem-line">把孤独写成诗。</span>
+                        <span class="poem-line">&nbsp;</span>
+                        <span class="poem-line">窗外的雨下了一整夜，</span>
+                        <span class="poem-line">像谁的心事，</span>
+                        <span class="poem-line">落在了不该落的地方。</span>
+                        <span class="poem-line">&nbsp;</span>
+                        <span class="poem-line">我守着一盏灯，</span>
+                        <span class="poem-line">等一个不会来的人，</span>
+                        <span class="poem-line">也等一个，更好的自己。</span>
+                    </div>
+                    <p class="poem-author">— 夜 读 随 笔</p>
+                </div>
+
+                <div class="poetry-image fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=lonely%20person%20silhouette%20looking%20at%20moon%20from%20window%20rainy%20night%20soft%20lamp%20light%20melancholy%20atmospheric%20cinematic&image_size=portrait_4_3" alt="窗前望月">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div class="gallery-inner">
+            <div class="section-label fade-in">Chapter · 贰</div>
+            <h2 class="section-title fade-in">散落在时光里的碎片</h2>
+
+            <div class="gallery-grid">
+                <div class="gallery-item item-1 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=empty%20cafe%20interior%20rainy%20window%20vintage%20warm%20light%20melancholy%20no%20people%20coffee%20cup%20on%20table%20cinematic&image_size=landscape_16_9" alt="空荡的咖啡馆">
+                    <div class="gallery-caption">
+                        <h4>午后咖啡馆</h4>
+                        <p>一杯冷掉的咖啡，一个未打完的电话</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item item-2 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=old%20vintage%20book%20with%20dried%20flower%20bookmark%20on%20wooden%20desk%20soft%20window%20light%20nostalgic%20melancholy%20still%20life&image_size=landscape_4_3" alt="旧书与干花">
+                    <div class="gallery-caption">
+                        <h4>未读完的书</h4>
+                        <p>那一页夹着干花，是整个春天的记忆</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item item-3 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cherry%20blossom%20petals%20falling%20on%20wet%20ground%20spring%20rain%20pastel%20soft%20focus%20melancholy%20beautiful%20sadness&image_size=landscape_4_3" alt="落花与雨">
+                    <div class="gallery-caption">
+                        <h4>春末的雨</h4>
+                        <p>樱花瓣坠落的速度，是每秒五厘米</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item item-4 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=vintage%20piano%20keys%20close%20up%20dramatic%20lighting%20shadow%20melancholy%20music%20atmospheric%20black%20and%20white&image_size=square" alt="钢琴键">
+                    <div class="gallery-caption">
+                        <h4>无声的旋律</h4>
+                        <p>黑键之间，永远夹着白键的忧伤</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item item-5 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=autumn%20maple%20leaves%20on%20bench%20golden%20hour%20sunlight%20park%20empty%20nostalgic%20peaceful%20soft%20focus&image_size=square" alt="秋日长椅">
+                    <div class="gallery-caption">
+                        <h4>秋的告别</h4>
+                        <p>长椅上落满了，没人收拾的黄昏</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item item-6 fade-in">
+                    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=foggy%20mountain%20lake%20reflection%20dawn%20mist%20serene%20peaceful%20blue%20tones%20melancholy%20landscape%20cinematic&image_size=square" alt="雾中湖">
+                    <div class="gallery-caption">
+                        <h4>雾色深处</h4>
+                        <p>湖面平静得像，谁忍住没掉的眼泪</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="letter-section">
+        <div class="section">
+            <div class="section-label fade-in">Chapter · 叁</div>
+            <h2 class="section-title fade-in">写给未来的自己</h2>
+
+            <div class="letter-container fade-in">
+                <p class="letter-date">深夜 · 子时</p>
+
+                <p class="letter-salutation">亲爱的你：</p>
+
+                <div class="letter-body">
+                    <p>写下这封信的时候，窗外的城市已经安静下来。只有远处的路灯，还在固执地亮着，像某个不肯入睡的人。</p>
+
+                    <p>我知道这些年你走得很慢，有时候甚至怀疑自己是不是走错了路。但请你记得，那些独自走过的黑暗隧道，那些在深夜里吞下的眼泪，那些一个人扛下来的时刻——它们都是真的，也都不会是白费的。</p>
+
+                    <p>不要着急。花会开在它应该开的季节，而你，也会去到你应该去的地方。如果此刻你正在经历寒冬，请再等一等，春天从来都不会缺席，只是偶尔会迟到。</p>
+
+                    <p>愿你永远保有温柔的能力，即使世界偶尔坚硬。愿你还能为一首歌落泪，还能为一片云驻足，还能相信一些，看起来不太可能的事情。</p>
+                </div>
+
+                <div class="letter-sign-off">
+                    <p class="closing">夜深了，保重。</p>
+                    <p class="signature">— 曾 经 的 你</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quotes-section">
+        <div class="quotes-inner">
+            <div class="section-label fade-in">Chapter · 肆</div>
+            <h2 class="section-title fade-in">一些散落的句子</h2>
+
+            <div class="quotes-grid">
+                <div class="quote-card fade-in">
+                    <p class="quote-text">我们终其一生，就是要摆脱他人的期待，找到真正的自己。有些路啊，只能一个人走。</p>
+                    <p class="quote-author">— 关 于 成 长</p>
+                </div>
+
+                <div class="quote-card fade-in">
+                    <p class="quote-text">如果你爱上了某个星球的一朵花，那么只要在夜晚仰望星空，就会觉得漫天的繁星，都像一朵朵盛开的花。</p>
+                    <p class="quote-author">— 关 于 想 念</p>
+                </div>
+
+                <div class="quote-card fade-in">
+                    <p class="quote-text">人生最好的境界，是丰富的安静。我想，安静是因为摆脱了外界虚名浮利的诱惑，丰富，是因为拥有了内在精神世界的宝藏。</p>
+                    <p class="quote-author">— 关 于 宁 静</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="stars" id="stars"></div>
+        <div class="footer-content">
+            <div class="divider"></div>
+            <h3 class="footer-title fade-in">Good Night</h3>
+            <p class="footer-text fade-in">
+                愿你有一个安稳的睡眠，<br>
+                梦里没有未完成的事，<br>
+                只有温柔的月光，和轻轻落在肩头的雪。
+            </p>
+            <div class="divider"></div>
+            <p class="copyright">© 夜的独白 · Solitude — Made in the quiet hours</p>
+        </div>
+    </footer>
+
+    <script>
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 80);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        const poemObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const lines = entry.target.querySelectorAll('.poem-line');
+                    lines.forEach((line, i) => {
+                        setTimeout(() => {
+                            line.classList.add('visible');
+                        }, i * 180);
+                    });
+                    poemObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.poem').forEach(poem => {
+            poemObserver.observe(poem);
+        });
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 60;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = (Math.random() * 2 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        createStars();
+
+        const heroBg = document.querySelector('.hero-bg');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            if (scrolled < window.innerHeight) {
+                heroBg.style.transform = `scale(1.08) translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
+
+</body>
+</html>

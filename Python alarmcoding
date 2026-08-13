@@ -1,0 +1,187 @@
+import time
+import tkinter as tk
+from tkinter import font as tkfont
+
+
+class CountdownApp:
+    BG = "#1e1e2e"
+    PANEL = "#313244"
+    ACCENT = "#89b4fa"
+    ACCENT_HOT = "#f38ba8"
+    OK = "#a6e3a1"
+    TEXT = "#cdd6f4"
+    SUB = "#a6adc8"
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("倒计时")
+        self.root.configure(bg=self.BG)
+        self.root.resizable(False, False)
+
+        self.total = 0          # 总秒数
+        self.remaining = 0      # 剩余秒数
+        self.running = False
+        self.after_id = None
+
+        self._build_ui()
+        self._center(420, 360)
+
+    # ---------- UI ----------
+    def _build_ui(self):
+        mono = tkfont.Font(family="Consolas", size=64, weight="bold")
+        label_font = tkfont.Font(family="Microsoft YaHei", size=11)
+        btn_font = tkfont.Font(family="Microsoft YaHei", size=11, weight="bold")
+        entry_font = tkfont.Font(family="Consolas", size=18, weight="bold")
+
+        # 顶部标题
+        title = tk.Label(self.root, text="⏱  倒计时", font=label_font,
+                         bg=self.BG, fg=self.TEXT)
+        title.pack(pady=(18, 6))
+
+        # 时间显示
+        self.time_var = tk.StringVar(value="00:00:00")
+        self.time_label = tk.Label(self.root, textvariable=self.time_var,
+                                   font=mono, bg=self.PANEL, fg=self.ACCENT)
+        self.time_label.pack(fill="x", padx=30, pady=6, ipady=10)
+
+        # 进度条（Canvas 实现，便于配色）
+        self.bar_w, self.bar_h = 360, 8
+        self.bar = tk.Canvas(self.root, width=self.bar_w, height=self.bar_h,
+                             bg=self.BG, highlightthickness=0)
+        self.bar.pack(pady=(0, 12))
+        self._draw_bar(0)
+
+        # 输入区域
+        input_frame = tk.Frame(self.root, bg=self.BG)
+        input_frame.pack(pady=4)
+
+        self.h_var = tk.StringVar(value="0")
+        self.m_var = tk.StringVar(value="5")
+        self.s_var = tk.StringVar(value="0")
+
+        for var, label in [(self.h_var, "时"), (self.m_var, "分"), (self.s_var, "秒")]:
+            f = tk.Frame(input_frame, bg=self.BG)
+            e = tk.Entry(f, textvariable=var, width=4, justify="center",
+                         font=entry_font, bg=self.PANEL, fg=self.TEXT,
+                         insertbackground=self.TEXT, relief="flat",
+                         highlightthickness=2,
+                         highlightbackground=self.PANEL,
+                         highlightcolor=self.ACCENT)
+            e.pack()
+            tk.Label(f, text=label, font=label_font, bg=self.BG,
+                     fg=self.SUB).pack(pady=(2, 0))
+            f.pack(side="left", padx=8)
+
+        # 按钮区
+        btn_frame = tk.Frame(self.root, bg=self.BG)
+        btn_frame.pack(pady=18)
+
+        self.start_btn = self._make_btn(btn_frame, "开始", self.ACCENT, self._toggle)
+        self.start_btn.pack(side="left", padx=8)
+        self._make_btn(btn_frame, "重置", self.ACCENT_HOT, self._reset).pack(side="left", padx=8)
+
+    def _make_btn(self, parent, text, color, cmd):
+        btn = tk.Button(parent, text=text, font=tkfont.Font(
+                            family="Microsoft YaHei", size=11, weight="bold"),
+                        width=8, bg=color, fg=self.BG, relief="flat",
+                        activebackground=color, activeforeground=self.BG,
+                        cursor="hand2", command=cmd)
+        return btn
+
+    def _draw_bar(self, ratio):
+        self.bar.delete("all")
+        self.bar.create_rectangle(0, 0, self.bar_w, self.bar_h,
+                                  fill=self.PANEL, outline="")
+        fill_w = max(0, int(self.bar_w * ratio))
+        if fill_w > 0:
+            self.bar.create_rectangle(0, 0, fill_w, self.bar_h,
+                                      fill=self.ACCENT, outline="")
+
+    def _center(self, w, h):
+        self.root.update_idletasks()
+        sw = self.root.winfo_screenwidth()
+        sh = self.root.winfo_screenheight()
+        x = (sw - w) // 2
+        y = (sh - h) // 2
+        self.root.geometry(f"{w}x{h}+{x}+{y}")
+
+    # ---------- 逻辑 ----------
+    def _parse_input(self):
+        try:
+            h = int(self.h_var.get() or 0)
+            m = int(self.m_var.get() or 0)
+            s = int(self.s_var.get() or 0)
+        except ValueError:
+            return 0
+        return h * 3600 + m * 60 + s
+
+    def _toggle(self):
+        if not self.running:
+            if self.remaining <= 0:
+                self.total = self._parse_input()
+                self.remaining = self.total
+            if self.remaining <= 0:
+                self._flash("请输入时间")
+                return
+            self.running = True
+            self.start_btn.config(text="暂停", bg=self.ACCENT_HOT)
+            self._tick()
+        else:
+            self._pause()
+
+    def _pause(self):
+        self.running = False
+        if self.after_id:
+            self.root.after_cancel(self.after_id)
+            self.after_id = None
+        self.start_btn.config(text="继续", bg=self.ACCENT)
+
+    def _tick(self):
+        if not self.running:
+            return
+        mins, secs = divmod(self.remaining, 60)
+        hours, mins = divmod(mins, 60)
+        self.time_var.set(f"{hours:02d}:{mins:02d}:{secs:02d}")
+
+        ratio = self.remaining / self.total if self.total else 0
+        self._draw_bar(ratio)
+
+        if self.remaining <= 0:
+            self._finish()
+            return
+
+        self.remaining -= 1
+        self.after_id = self.root.after(1000, self._tick)
+
+    def _finish(self):
+        self.running = False
+        self.time_var.set("00:00:00")
+        self.start_btn.config(text="开始", bg=self.ACCENT)
+        self.time_label.config(fg=self.OK)
+        self.root.bell()
+        self.root.after(1500, lambda: self.time_label.config(fg=self.ACCENT))
+        self._flash("时间到！", color=self.OK)
+
+    def _reset(self):
+        self._pause()
+        self.remaining = 0
+        self.total = 0
+        self.time_var.set("00:00:00")
+        self._draw_bar(0)
+        self.start_btn.config(text="开始", bg=self.ACCENT)
+
+    def _flash(self, msg, color=None):
+        old = self.time_var.get()
+        self.time_var.set(msg)
+        if color:
+            self.time_label.config(fg=color)
+        self.root.after(1200, lambda: (
+            self.time_var.set(old),
+            self.time_label.config(fg=self.ACCENT),
+        ))
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CountdownApp(root)
+    root.mainloop()
